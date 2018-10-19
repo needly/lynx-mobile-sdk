@@ -123,10 +123,15 @@
         
         window.lynxMobile = lynxMobile();
 
-        var event = new CustomEvent("lynxMobileLoaded");
-        window.dispatchEvent(event);
-
-        console.log("LynxMobile Loaded");
+        if (window.webkit) {
+            setTimeout(function(){ 
+                window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
+                console.log("LynxMobile Loaded");
+            }, 1000);
+        } else {
+            window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
+            console.log("LynxMobile Loaded");
+        }
 
     }
     
