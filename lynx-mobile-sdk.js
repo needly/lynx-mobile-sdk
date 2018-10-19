@@ -120,8 +120,14 @@
     }
 
     if (typeof window.lynxMobile === "undefined") {
+        
         window.lynxMobile = lynxMobile();
-        console.log("LynxMobile Initiated");
+
+        var event = new CustomEvent("lynxMobileLoaded");
+        window.dispatchEvent(event);
+
+        console.log("LynxMobile Loaded");
+
     }
     
 })(window);
