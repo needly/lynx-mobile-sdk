@@ -1,5 +1,5 @@
 # lynx-mobile-sdk
-Repository for the lynx mobile sdk
+This sdk is injected into dapps on EOS Lynx mobile.
 
 # License
 MIT License
