@@ -85,6 +85,28 @@
             
         };
 
+        // PRIVATE
+        _retval.arbitrarySignatureResult = function (success, result) {
+
+            var event = new CustomEvent("lynxMobileOnArbitrarySignatureResult", {
+                detail: {
+                    success: success,
+                    result: result
+                }
+            });
+            window.dispatchEvent(event);
+
+            if (success && typeof result == "string" || result instanceof String) {
+                this.handlers["arbitrarySignatureResult"].resolve(result);
+            } else if (!success && typeof result == "string" || result instanceof String) {
+                this.handlers["arbitrarySignatureResult"].reject(new Error(result));
+            } else {
+                this.handlers["arbitrarySignatureResult"].reject(new Error('There was an error providing signature'));
+            }
+            delete this.handlers["arbitrarySignatureResult"];
+
+        };
+
         ///////////////////////////////////////////
         // Public functions. These are to be called
         // by your web application
@@ -120,6 +142,17 @@
                 };
                 window.removeEventListener("lynxMobileOnTransactionResult", _func);
                 window.addEventListener("lynxMobileOnTransactionResult", _func);
+            }
+        };
+
+        // PUBLIC LISTENER
+        _retval.listenOnArbitrarySignatureResult = function (callBack) {
+            if (typeof callBack == "function") {
+                var _func = function (e) {
+                    callBack(e.detail);
+                };
+                window.removeEventListener("lynxMobileOnArbitrarySignatureResult", _func);
+                window.addEventListener("lynxMobileOnArbitrarySignatureResult", _func);
             }
         };
 
@@ -195,6 +228,21 @@
                     window.webkit.messageHandlers.requestSetAccount.postMessage(data);
                 } else if (window.android) {
                     window.android.requestSetAccount(data || "");
+                }
+
+            });
+        };
+
+        // PUBLIC
+        _retval.requestArbitrarySignature = function async (data) {
+            return new Promise((resolve, reject) => {
+
+                this.handlers["arbitrarySignatureResult"] = { resolve, reject };
+
+                if (window.webkit) {
+                    window.webkit.messageHandlers.requestArbitrarySignature.postMessage(JSON.stringify(data));
+                } else if (window.android) {
+                    window.android.requestArbitrarySignature(JSON.stringify(data) || "");
                 }
 
             });
