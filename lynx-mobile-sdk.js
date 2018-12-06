@@ -157,7 +157,7 @@
         };
 
         // PUBLIC
-        _retval.eosTransfer = function async (data) {
+        _retval.eosTransfer = function (data) {
 
             return new Promise((resolve, reject) => {
 
@@ -174,7 +174,7 @@
         };
 
         // PUBLIC
-        _retval.transfer = function async (data) {
+        _retval.transfer = function (data) {
             return new Promise((resolve, reject) => {
 
                 this.handlers["transactionResult"] = { resolve, reject };
@@ -189,7 +189,7 @@
         };
 
         // PUBLIC
-        _retval.transact = function async (data) {
+        _retval.transact = function (data) {
             return new Promise((resolve, reject) => {
 
                 this.handlers["transactionResult"] = { resolve, reject };
@@ -204,7 +204,7 @@
         };
 
         // PUBLIC
-        _retval.requestSetAccountName = function async () {
+        _retval.requestSetAccountName = function () {
             return new Promise((resolve, reject) => {
 
                 this.handlers["setAccountName"] = { resolve, reject };
@@ -219,7 +219,7 @@
         };
 
         // PUBLIC
-        _retval.requestSetAccount = function async (data) {
+        _retval.requestSetAccount = function (data) {
             return new Promise((resolve, reject) => {
 
                 this.handlers["setAccount"] = { resolve, reject };
@@ -234,7 +234,7 @@
         };
 
         // PUBLIC
-        _retval.requestArbitrarySignature = function async (data) {
+        _retval.requestArbitrarySignature = function (data) {
             return new Promise((resolve, reject) => {
 
                 this.handlers["arbitrarySignatureResult"] = { resolve, reject };
