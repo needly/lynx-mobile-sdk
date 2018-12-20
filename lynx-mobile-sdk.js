@@ -6,11 +6,15 @@
         _retval.handlers = handlers;
 
         function parseJSON(json) {
-            var parsed;
-            try {
-                parsed = JSON.parse(json)
-            } catch (e) { }
-            return parsed;
+            if (typeof json === 'object' && json !== null) {
+                return json;
+            } else {
+                var parsed;
+                try {
+                    parsed = JSON.parse(json)
+                } catch (e) { }
+                return parsed || json;
+            }
         }
 
         ///////////////////////////////////////////
@@ -26,7 +30,7 @@
             var event = new CustomEvent("lynxMobileOnSetAccount", {
                 detail: {
                     success: success,
-                    result: (typeof parsedResult === 'undefined') ? result : parsedResult
+                    result: parsedResult
                 }
             });
             window.dispatchEvent(event);
@@ -69,7 +73,7 @@
             var event = new CustomEvent("lynxMobileOnTransactionResult", {
                 detail: {
                     success: success,
-                    result: (typeof parsedResult === 'undefined') ? result : parsedResult
+                    result: parsedResult
                 }
             });
             window.dispatchEvent(event);
