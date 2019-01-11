@@ -193,15 +193,29 @@
         };
 
         // PUBLIC
-        _retval.transact = function (data) {
+        _retval.transact = function (data, options) {
             return new Promise((resolve, reject) => {
+
+                let modifiedData = data;
+
+                if (typeof data === 'object' && data.constructor === Array) {
+                    modifiedData = { actions: data };
+                } else if (typeof data === undefined || typeof data !== 'object' && data.constructor !== Object) {
+                    reject(new Error('First argument not an object'));
+                }
+
+                if (typeof options === 'boolean' && options === false) {
+                    modifiedData.options = { broadcast: false };
+                } else if (typeof options === 'object' && options.constructor === Object) {
+                    modifiedData.options = options;
+                }
 
                 this.handlers["transactionResult"] = { resolve, reject };
 
                 if (window.webkit) {
-                    window.webkit.messageHandlers.transact.postMessage(JSON.stringify(data));
+                    window.webkit.messageHandlers.transact.postMessage(JSON.stringify(modifiedData));
                 } else if (window.android) {
-                    window.android.transact(JSON.stringify(data) || "");
+                    window.android.transact(JSON.stringify(modifiedData) || "");
                 }
 
             });
