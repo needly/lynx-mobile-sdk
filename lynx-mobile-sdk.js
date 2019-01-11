@@ -90,6 +90,30 @@
         };
 
         // PRIVATE
+        _retval.signatureResult = function (success, result) {
+
+            var parsedResult = parseJSON(result);
+
+            var event = new CustomEvent("lynxMobileOnSignatureResult", {
+                detail: {
+                    success: success,
+                    result: parsedResult
+                }
+            });
+            window.dispatchEvent(event);
+
+            if (success && typeof parsedResult !== 'undefined') {
+                this.handlers["signatureResult"].resolve(parsedResult);
+            } else if (!success && typeof parsedResult !== 'undefined') {
+                this.handlers["signatureResult"].reject(parsedResult);
+            } else {
+                this.handlers["signatureResult"].reject(new Error('Signature request was cancelled or there was a problem'));
+            }
+            delete this.handlers["signatureResult"];
+            
+        };
+
+        // PRIVATE
         _retval.arbitrarySignatureResult = function (success, result) {
 
             var event = new CustomEvent("lynxMobileOnArbitrarySignatureResult", {
@@ -160,6 +184,17 @@
             }
         };
 
+        // PUBLIC LISTENER
+        _retval.listenOnSignatureResult = function (callBack) {
+            if (typeof callBack == "function") {
+                var _func = function (e) {
+                    callBack(e.detail);
+                };
+                window.removeEventListener("lynxMobileOnSignatureResult", _func);
+                window.addEventListener("lynxMobileOnSignatureResult", _func);
+            }
+        };
+
         // PUBLIC
         _retval.eosTransfer = function (data) {
 
@@ -193,7 +228,7 @@
         };
 
         // PUBLIC
-        _retval.transact = function (data, options) {
+        _retval.transact = function (data) {
             return new Promise((resolve, reject) => {
 
                 let modifiedData = data;
@@ -202,12 +237,6 @@
                     modifiedData = { actions: data };
                 } else if (typeof data === undefined || typeof data !== 'object' && data.constructor !== Object) {
                     reject(new Error('First argument not an object'));
-                }
-
-                if (typeof options === 'boolean' && options === false) {
-                    modifiedData.options = { broadcast: false };
-                } else if (typeof options === 'object' && options.constructor === Object) {
-                    modifiedData.options = options;
                 }
 
                 this.handlers["transactionResult"] = { resolve, reject };
@@ -255,12 +284,39 @@
         _retval.requestArbitrarySignature = function (data) {
             return new Promise((resolve, reject) => {
 
+                if (typeof data === undefined || typeof data !== 'object' && data.constructor !== Object) {
+                    reject(new Error('Argument not an object. Expected { data: string, whatFor: string}'));
+                }
+
                 this.handlers["arbitrarySignatureResult"] = { resolve, reject };
 
                 if (window.webkit) {
                     window.webkit.messageHandlers.requestArbitrarySignature.postMessage(JSON.stringify(data));
                 } else if (window.android) {
                     window.android.requestArbitrarySignature(JSON.stringify(data) || "");
+                }
+
+            });
+        };
+
+        // PUBLIC
+        _retval.requestSignature = function (data) {
+            return new Promise((resolve, reject) => {
+
+                if (typeof data === undefined || typeof data !== 'object' && data.constructor !== Object) {
+                    reject(new Error('Argument not an object. Expected deserialized transaction'));
+                }
+
+                if (data.hasOwnProperty("serializedTransaction")) {
+                    reject(new Error('Signing serialized transactions not supported yet. Please pass deserialized transaction.'));
+                }
+
+                this.handlers["signatureResult"] = { resolve, reject };
+
+                if (window.webkit) {
+                    window.webkit.messageHandlers.requestSignature.postMessage(JSON.stringify(data));
+                } else if (window.android) {
+                    window.android.requestSignature(JSON.stringify(data) || "");
                 }
 
             });
