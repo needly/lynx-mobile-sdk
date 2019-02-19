@@ -35,12 +35,14 @@
             });
             window.dispatchEvent(event);
 
-            if (success && typeof parsedResult !== 'undefined') {
-                this.handlers["setAccount"].resolve(parsedResult);
-            } else {
-                this.handlers["setAccount"].reject(new Error('There was a problem fetching Account'));
+            if (this.handlers.hasOwnProperty('setAccount')) {
+                if (success && typeof parsedResult !== 'undefined') {
+                    this.handlers["setAccount"].resolve(parsedResult);
+                } else {
+                    this.handlers["setAccount"].reject(new Error('There was a problem fetching Account'));
+                }
+                delete this.handlers["setAccount"];
             }
-            delete this.handlers["setAccount"];
 
         };
 
@@ -56,12 +58,14 @@
                 window.dispatchEvent(event);
             }
 
-            if (typeof accountName == "string" || accountName instanceof String) {
-                this.handlers["setAccountName"].resolve(accountName);
-            } else {
-                this.handlers["setAccountName"].reject(new Error('There was a problem fetching Account Name'));
+            if (this.handlers.hasOwnProperty('setAccountName')) {
+                if (typeof accountName == "string" || accountName instanceof String) {
+                    this.handlers["setAccountName"].resolve(accountName);
+                } else {
+                    this.handlers["setAccountName"].reject(new Error('There was a problem fetching Account Name'));
+                }
+                delete this.handlers["setAccountName"];
             }
-            delete this.handlers["setAccountName"];
 
         };
 
@@ -78,15 +82,17 @@
             });
             window.dispatchEvent(event);
 
-            if (success && typeof parsedResult !== 'undefined') {
-                this.handlers["transactionResult"].resolve(parsedResult);
-            } else if (!success && typeof parsedResult !== 'undefined') {
-                this.handlers["transactionResult"].reject(parsedResult);
-            } else {
-                this.handlers["transactionResult"].reject(new Error('Transaction was cancelled or there was a problem'));
+            if (this.handlers.hasOwnProperty('transactionResult')) {
+                if (success && typeof parsedResult !== 'undefined') {
+                    this.handlers["transactionResult"].resolve(parsedResult);
+                } else if (!success && typeof parsedResult !== 'undefined') {
+                    this.handlers["transactionResult"].reject(parsedResult);
+                } else {
+                    this.handlers["transactionResult"].reject(new Error('Transaction was cancelled or there was a problem'));
+                }
+                delete this.handlers["transactionResult"];
             }
-            delete this.handlers["transactionResult"];
-            
+
         };
 
         // PRIVATE
@@ -102,14 +108,16 @@
             });
             window.dispatchEvent(event);
 
-            if (success && typeof parsedResult !== 'undefined') {
-                this.handlers["signatureResult"].resolve(parsedResult);
-            } else if (!success && typeof parsedResult !== 'undefined') {
-                this.handlers["signatureResult"].reject(parsedResult);
-            } else {
-                this.handlers["signatureResult"].reject(new Error('Signature request was cancelled or there was a problem'));
+            if (this.handlers.hasOwnProperty('signatureResult')) {
+                if (success && typeof parsedResult !== 'undefined') {
+                    this.handlers["signatureResult"].resolve(parsedResult);
+                } else if (!success && typeof parsedResult !== 'undefined') {
+                    this.handlers["signatureResult"].reject(parsedResult);
+                } else {
+                    this.handlers["signatureResult"].reject(new Error('Signature request was cancelled or there was a problem'));
+                }
+                delete this.handlers["signatureResult"];
             }
-            delete this.handlers["signatureResult"];
             
         };
 
@@ -124,15 +132,17 @@
             });
             window.dispatchEvent(event);
 
-            if (success && typeof result == "string" || result instanceof String) {
-                this.handlers["arbitrarySignatureResult"].resolve(result);
-            } else if (!success && typeof result == "string" || result instanceof String) {
-                this.handlers["arbitrarySignatureResult"].reject(new Error(result));
-            } else {
-                this.handlers["arbitrarySignatureResult"].reject(new Error('There was an error providing signature'));
+            if (this.handlers.hasOwnProperty('signatureResult')) {
+                if (success && typeof result == "string" || result instanceof String) {
+                    this.handlers["arbitrarySignatureResult"].resolve(result);
+                } else if (!success && typeof result == "string" || result instanceof String) {
+                    this.handlers["arbitrarySignatureResult"].reject(new Error(result));
+                } else {
+                    this.handlers["arbitrarySignatureResult"].reject(new Error('There was an error providing signature'));
+                }
+                delete this.handlers["arbitrarySignatureResult"];
             }
-            delete this.handlers["arbitrarySignatureResult"];
-
+            
         };
 
         ///////////////////////////////////////////
