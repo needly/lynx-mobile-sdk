@@ -132,7 +132,7 @@
             });
             window.dispatchEvent(event);
 
-            if (this.handlers.hasOwnProperty('signatureResult')) {
+            if (this.handlers.hasOwnProperty('arbitrarySignatureResult')) {
                 if (success && typeof result == "string" || result instanceof String) {
                     this.handlers["arbitrarySignatureResult"].resolve(result);
                 } else if (!success && typeof result == "string" || result instanceof String) {
