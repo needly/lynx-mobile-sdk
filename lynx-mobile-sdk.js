@@ -1,9 +1,9 @@
+const AGENT_IOS = "EOSLynx IOS";
+const AGENT_ANDROID = "EOSLynx Android";
+const AGENT_DESKTOP = "EOSLynx Desktop";
+
 (function (window) {
   function lynxMobile() {
-
-    const AGENT_IOS = "EOSLynx IOS";
-    const AGENT_ANDROID = "EOSLynx Android";
-    const AGENT_DESKTOP = "EOSLynx Desktop";
 
     // promise handlers
     // these are also the names of the functions
@@ -14,10 +14,6 @@
     const HANDLER_TRANSACTION_RESULT = "transactionResult";
     const HANDLER_SIGNATURE_RESULT = "signatureResult";
     const HANDLER_ARBITRARY_RESULT = "arbitrarySignatureResult";
-
-    var _retval = {};
-    var handlers = {};
-    _retval.handlers = handlers;
 
     function parseJSON(json) {
       if (typeof json === 'object' && json !== null) {
@@ -30,6 +26,10 @@
         return parsed || json;
       }
     }
+
+    var _retval = {};
+    var handlers = {};
+    _retval.handlers = handlers;
 
     ///////////////////////////////////////////
     // Private functions. DO NOT CALL FROM WEB
@@ -300,7 +300,7 @@
     window.lynxMobile = lynxMobile();
 
     switch (navigator.userAgent) {
-      case "EOSLynx IOS":
+      case AGENT_IOS:
 
         setTimeout(function () {
           window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
@@ -309,8 +309,8 @@
 
         break;
 
-      case "EOSLynx Android":
-      case "EOSLynx Desktop":
+      case AGENT_ANDROID:
+      case AGENT_DESKTOP:
 
         window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
         console.log("LynxMobile Loaded");
