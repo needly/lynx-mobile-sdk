@@ -54,7 +54,6 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
 
     // PRIVATE
     _retval.setAccountName = function (accountName) {
-
       if (this.handlers.hasOwnProperty(HANDLER_SET_ACCOUNT_NAME)) {
         if (typeof accountName == "string" || accountName instanceof String) {
           this.handlers[HANDLER_SET_ACCOUNT_NAME].resolve(accountName);
@@ -138,7 +137,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.eosTransfer(JSON.stringify(data) || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestEosTransfer(data);
             break;
         }
 
@@ -160,7 +159,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.transfer(JSON.stringify(data) || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestTransfer(data);
             break;
         }
 
@@ -189,7 +188,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.transact(JSON.stringify(modifiedData) || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestTransact(modifiedData);
             break;
         }
 
@@ -210,7 +209,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.requestSetAccountName("");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestSetAccountName();
             break;
         }
 
@@ -231,7 +230,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.requestSetAccount(data || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestSetAccount(data);
             break;
         }
 
@@ -256,7 +255,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.requestArbitrarySignature(JSON.stringify(data) || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestArbitrarySignature(data);
             break;
         }
 
@@ -285,7 +284,7 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
             window.android.requestSignature(JSON.stringify(data) || "");
             break;
           case AGENT_DESKTOP:
-            // ADD FUNCTION CALL TO DESKTOP
+            window.desktop.requestSignature(data);
             break;
         }
 
@@ -310,10 +309,17 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
         break;
 
       case AGENT_ANDROID:
-      case AGENT_DESKTOP:
-
         window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
         console.log("LynxMobile Loaded");
+
+        break;
+        
+      case AGENT_DESKTOP:
+
+        setTimeout(function () {
+          window.dispatchEvent(new CustomEvent("lynxMobileLoaded"));
+          console.log("LynxMobile Loaded");
+        }, 300);
 
         break;
     }
