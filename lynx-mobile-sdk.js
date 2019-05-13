@@ -37,6 +37,18 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
     ///////////////////////////////////////////
 
     // PRIVATE
+    _retval.appDidEnterBackground = function () {
+      window.dispatchEvent(new CustomEvent("lynxMobileEnteredBackground"));
+      console.log("LynxMobile Entered Background");
+    }
+
+    // PRIVATE
+    _retval.appDidEnterForeground = function () {
+      window.dispatchEvent(new CustomEvent("lynxMobileEnteredForeground"));
+      console.log("LynxMobile Entered Foreground");
+    }
+
+    // PRIVATE
     _retval.setAccount = function (success, result) {
 
       var parsedResult = parseJSON(result);
