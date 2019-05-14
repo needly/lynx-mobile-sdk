@@ -303,6 +303,44 @@ const AGENT_DESKTOP = "EOSLynx Desktop";
       });
     };
 
+    // PUBLIC
+    _retval.requestFullscreen = function (data) {
+      if (typeof data === "boolean") {
+        switch (navigator.userAgent) {
+          case AGENT_IOS:
+            window.webkit.messageHandlers.requestFullscreen.postMessage(data);
+            break;
+          case AGENT_ANDROID:
+            window.android.requestFullscreen(data);
+            break;
+          case AGENT_DESKTOP:
+            window.desktop.requestFullscreen(data);
+            break;
+        }
+      } else {
+        console.log("Must pass true or false for lynxMobile.requestFullscreen");
+      }
+    }
+
+    // PUBLIC
+    _retval.requestLandscape = function (data) {
+      if (typeof data === "boolean") {
+        switch (navigator.userAgent) {
+          case AGENT_IOS:
+            window.webkit.messageHandlers.requestLandscape.postMessage(data);
+            break;
+          case AGENT_ANDROID:
+            window.android.requestLandscape(data);
+            break;
+          case AGENT_DESKTOP:
+            console.log("requestLandscape not supported on Desktop");
+            break;
+        }
+      } else {
+        console.log("Must pass true or false for lynxMobile.requestLandscape");
+      }
+    }
+
     return _retval;
   }
 
